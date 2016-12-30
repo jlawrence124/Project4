@@ -438,12 +438,13 @@ var resizePizzas = function(size) {
             default:
                 console.log("bug in changeSliderLabel");
         }
+
     }
 
     changeSliderLabel(size);
 
     // I commented out this section because it was largely unnecessary
-    // and added nothing to the project
+    // and added nothing to the project.
     /*function determineDx(elem, size) {
         var oldWidth = elem.offsetWidth;
         var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
@@ -460,6 +461,7 @@ var resizePizzas = function(size) {
         return dx;
     } */
 
+    //using this method is
     function changePizzaSizes(size) {
         switch (size) {
             case "1":
@@ -546,18 +548,13 @@ function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
 
-    var scrollPosition = (document.body.scrollTop / 1250);
-    var i = 0;
-
-    for (; i < items.length; i++) {
-        items[i].phaseLeft = Math.sin(scrollPosition + (i % 5));
-        items[i].scrollMove = ((items[i].basicLeft + 100 * items[i].phaseLeft) - 1024);
+    // here I removed the less performant code that included style recalcuation, resulting in FSL
+    //  I replaced it with
+    var items = document.querySelectorAll('.mover');
+    for (var i = items.length; i--;) {
+        var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+        items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
     }
-    i = 0;
-    for (; i < items.length; i++) {
-        items[i].style.transform = 'translateX(' + items[i].scrollMove + 'px' + ')';
-    }
-
     // User Timing API to the rescue again. Seriously, it's worth learning.
     // Super easy to create custom metrics.
     window.performance.mark("mark_end_frame");
@@ -575,7 +572,8 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
     var cols = 8;
     var s = 256;
-    for (var i = 0; i < 200; i++) {
+    //200 pizzas is a bit much, don't you think?
+    for (var i = 0; i < 40; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
         elem.src = "images/pizza.png";
